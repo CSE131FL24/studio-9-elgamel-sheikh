@@ -1,30 +1,31 @@
 package studio9.tests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
+import static org.junit.Assert.*;
+import java.util.*;
 
 import studio9.WordCount;
 
-/**
- * @author Dennis Cosgrove (http://www.cse.wustl.edu/~cosgroved/)
- */
 public class WordCountTest {
-	@Test
-	public void test() {
-		List<String> words = Arrays.asList("to", "be", "or", "not", "to", "be");
-		Map<String, Integer> map = WordCount.countWords(words);
-		assertEquals(4, map.size());
-		Map<String, Integer> expected = new HashMap<>();
-		expected.put("to", 2);
-		expected.put("be", 2);
-		expected.put("or", 1);
-		expected.put("not", 1);
-		assertEquals(expected, map);
-	}
+
+    @Test
+    public void testCountWords() {
+        // List of words to test
+        List<String> words = Arrays.asList("to", "be", "or", "not", "to", "be");
+        
+        // Create an instance of WordCount
+        WordCount wordCountInstance = new WordCount();
+        
+        // Call the non-static countWords method on the instance
+        Map<String, Integer> map = wordCountInstance.countWords(words);
+        
+        // Assert the expected result
+        Map<String, Integer> expectedMap = new HashMap<>();
+        expectedMap.put("to", 2);
+        expectedMap.put("be", 2);
+        expectedMap.put("or", 1);
+        expectedMap.put("not", 1);
+        
+        assertEquals(expectedMap, map);
+    }
 }

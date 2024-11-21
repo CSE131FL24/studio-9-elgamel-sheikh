@@ -3,98 +3,92 @@ package studio9;
 import java.util.LinkedList;
 
 public class Polynomial {
-	
-	private LinkedList<Double> list;
+    private LinkedList<Double> coefficients;
 
-	/**
-	 * Constructs a Polynomial with no terms yet.
-	 */
-	public Polynomial() {
-		//FIXME
-	}
+    // Constructor initializes an empty polynomial (empty list of coefficients)
+    public Polynomial() {
+        coefficients = new LinkedList<>();
+    }
 
-	
-	/**
-	 * 
-	 * @param coeff
-	 * @return polynomial with added term
-	 */
-	public void addTerm(double coeff) {
-		//FIXME
-	}
-	
-	/*
-	 * Returns a String of the polynomial with the proper form:
-	 * 
-	 * Cx^N + Cx^N-1 + ... + Cx + C
-	 */
-	public String toString() {
-		return ""; //FIXME
-	}
-	
-	/**
-	 * 
-	 * @param x
-	 * @return value of polynomial at that x
-	 */
-	public double evaluate(double x) {
-		return 0;//FIXME
-	}
+    // Adds a term to the polynomial. Assumes that terms are added in increasing power order.
+    public void addTerm(double coefficient) {
+        coefficients.add(coefficient);
+    }
 
-	
-	public Polynomial derivative() {
-		return null;//FIXME
-	}
-	
+    // Returns the string representation of the polynomial
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
 
-	/**
-	 * This is the "equals" method that is called by
-	 *    assertEquals(...) from your JUnit test code.
-	 *    It must be prepared to compare this Polynomial
-	 *    with any other kind of Object (obj).  Eclipse
-	 *    automatically generated the code for this method,
-	 *    after I told it to use the contained list as the basis
-	 *    of equality testing.  I have annotated the code to show
-	 *    what is going on.
-	 */
+        for (int i = 0; i < coefficients.size(); i++) {
+            double coefficient = coefficients.get(i);
+            int power = coefficients.size() - 1 - i;
 
-	public boolean equals(Object obj) {
-		// If the two objects are exactly the same object,
-		//    we are required to return true.  The == operator
-		//    tests whether they are exactly the same object.
-		if (this == obj)
-			return true;
-		// "this" object cannot be null (or we would have
-		//    experienced a null-pointer exception by now), but
-		//    obj can be null.  We are required to say the two
-		//    objects are not the same if obj is null.
-		if (obj == null)
-			return false;
+            if (coefficient != 0) {
+                if (sb.length() > 0) {
+                    sb.append(coefficient > 0 ? " + " : " - ");
+                } else if (coefficient < 0) {
+                    sb.append("-");
+                }
 
-		//  The two objects must be Polynomials (or better) to
-		//     allow meaningful comparison.
-		if (!(obj instanceof Polynomial))
-			return false;
+                sb.append(Math.abs(coefficient));
 
-		// View the obj reference now as the Polynomial we know
-		//   it to be.  This works even if obj is a BetterPolynomial.
-		Polynomial other = (Polynomial) obj;
+                if (power > 0) {
+                    sb.append("x");
+                    if (power > 1) {
+                        sb.append("^").append(power);
+                    }
+                }
+            }
+        }
 
-		//
-		// If we get here, we have two Polynomial objects,
-		//   this and other,
-		//   and neither is null.  Eclipse generated code
-		//   to make sure that the Polynomial's list references
-		//   are non-null, but we can prove they are not null
-		//   because the constructor sets them to some object.
-		//   I cleaned up that code to make this read better.
+        return sb.length() == 0 ? "0" : sb.toString();
+    }
 
+    // Evaluates the polynomial at a given value of x
+    public double evaluate(double x) {
+        double result = 0;
+        int power = coefficients.size() - 1;
 
-		// A LinkedList object is programmed to compare itself
-		//   against any other LinkedList object by checking
-		//   that the elements in each list agree.
+        for (double coefficient : coefficients) {
+            result += coefficient * Math.pow(x, power);
+            power--;
+        }
 
-		return this.list.equals(other.list);
-	}
+        return result;
+    }
 
+    // Computes the derivative of the polynomial using the power rule
+    public Polynomial derivative() {
+        Polynomial derivative = new Polynomial();
+
+        for (int i = 0; i < coefficients.size(); i++) {
+            double coefficient = coefficients.get(i);
+            int power = coefficients.size() - 1 - i;
+
+            if (power > 0) {
+                derivative.addTerm(coefficient * power);
+            }
+        }
+
+        return derivative;
+    }
+
+    // Override equals to compare two polynomials
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Polynomial that = (Polynomial) obj;
+
+        // Compare coefficients list for equality
+        return this.coefficients.equals(that.coefficients);
+    }
+
+    // Override hashCode to ensure proper hashing of polynomial objects
+    @Override
+    public int hashCode() {
+        return coefficients.hashCode();
+    }
 }
